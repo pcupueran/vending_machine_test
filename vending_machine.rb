@@ -1,5 +1,5 @@
 class VendingMachine
-  attr_accessor :products, :chosen_product, :inserted_amount
+  attr_accessor :products, :chosen_product, :inserted_amount, :change, :insufficient_amount
   
   PRODUCTS = [{ name: 'lily', price: 100 }, { name: 'anemone', price: 200 } , { name: 'daisy', price: 300 }]
 
@@ -18,11 +18,33 @@ class VendingMachine
 
   def return_product
     return "Please select a product" unless @chosen_product
-    verify_amount ? @chosen_product[:name] : "The amount inserted is incorrect"
+    if verify_amount 
+      @chosen_product[:name]
+    else
+      process_transaction
+    end
   end
 
   private
   def verify_amount
     @inserted_money == @chosen_product[:price]
+  end
+
+  def process_transaction
+    if @inserted_money > @chosen_product[:price]
+      @change = change_to_return
+      @chosen_product[:name]
+    else
+      @insufficient_amount = requested_amount
+      "Insufficient funds, please insert #{@insufficient_amount} more"
+    end
+  end
+
+  def requested_amount
+    @chosen_product[:price] - @inserted_money
+  end
+
+  def change_to_return
+    @inserted_money - @chosen_product[:price]
   end
 end

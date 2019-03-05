@@ -35,8 +35,15 @@ class TestVendingMachine < Test::Unit::TestCase
     assert_equal('Please select a product', @vending_machine.return_product)
   end
 
-  def test_incorrect_amount_inserted
+  def test_incorrect_amount_inserted_give_change
     @vending_machine.insert_money(310)
-    assert_equal('The amount inserted is incorrect', @vending_machine.return_product)
+    assert_equal('daisy', @vending_machine.return_product)
+    assert_equal(10, @vending_machine.change)
+  end
+
+  def test_incorrect_amount_inserted_insufficient_funds
+    @vending_machine.insert_money(280)
+    assert_equal("Insufficient funds, please insert 20 more", @vending_machine.return_product)
+    assert_equal(20, @vending_machine.insufficient_amount)
   end
 end
