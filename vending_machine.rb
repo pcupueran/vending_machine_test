@@ -1,10 +1,11 @@
 class VendingMachine
-  attr_accessor :products, :chosen_product, :inserted_amount, :change, :insufficient_amount
+  attr_accessor :products, :chosen_product, :inserted_amount, :change, :insufficient_amount, :internal_change
   
   PRODUCTS = [{ name: 'lily', price: 100 }, { name: 'anemone', price: 200 } , { name: 'daisy', price: 300 }]
 
-  def initialize
-    @products = PRODUCTS
+  def initialize(products=PRODUCTS, change={})
+    @products = products
+    @internal_change = change
   end
 
   def select_product(name)

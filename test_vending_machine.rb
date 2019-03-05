@@ -46,4 +46,26 @@ class TestVendingMachine < Test::Unit::TestCase
     assert_equal("Insufficient funds, please insert 20 more", @vending_machine.return_product)
     assert_equal(20, @vending_machine.insufficient_amount)
   end
+
+  def test_initial_products
+    products = [{ name: 'lily', price: 100 }, { name: 'anemone', price: 200 }]
+    vending_machine = VendingMachine.new(products)
+    assert_equal(products, vending_machine.products)
+  end
+
+  def test_initial_change
+    change = { 
+      '1p' => 20, 
+      '2p' => 30, 
+      '5p' =>20, 
+      '10p' => 40, 
+      '20p' => 30, 
+      '50p' => 40, 
+      '£1' => 20, 
+      '£2' => 10 
+    }
+
+    vending_machine = VendingMachine.new(nil, change)
+    assert_equal(change, vending_machine.internal_change)
+  end
 end
