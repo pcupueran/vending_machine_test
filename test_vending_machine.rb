@@ -8,8 +8,8 @@ class TestVendingMachine < Test::Unit::TestCase
     @vending_machine.insert_money(300)
   end
   
-  def test_correct_product_and_amount
-    assert_equal('daisy', @vending_machine.chosen_product)
+  def test_correct_product
+    assert_equal('daisy', @vending_machine.chosen_product[:name])
   end
 
   def test_correct_amount
