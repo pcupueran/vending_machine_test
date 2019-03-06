@@ -8,7 +8,19 @@ class TestVendingMachine < Test::Unit::TestCase
       anemone: { name: 'anemone', price: 200, quantity: 5 } , 
       daisy: { name: 'daisy', price: 300, quantity: 4 }
     }
-    @vending_machine = VendingMachine.new(products)
+
+    change = { 
+      '1p' => 20, 
+      '2p' => 30, 
+      '5p' =>20, 
+      '10p' => 40, 
+      '20p' => 30, 
+      '50p' => 40, 
+      '£1' => 20, 
+      '£2' => 10 
+    }
+
+    @vending_machine = VendingMachine.new(products, change)
     @vending_machine.select_product('daisy')
     @vending_machine.insert_money(300)
   end
@@ -97,5 +109,17 @@ class TestVendingMachine < Test::Unit::TestCase
     }
 
     assert_equal("There isn't enough space for all the products.", @vending_machine.refill(products))
+  end
+
+  def test_add_internal_change
+    change = { 
+      '1p' => 20, 
+      '2p' => 20, 
+      '5p' =>5
+    }
+    @vending_machine.add_internal_change(change)
+    assert_equal(40, @vending_machine.internal_change['1p'])
+    assert_equal(50, @vending_machine.internal_change['2p'])
+    assert_equal(25, @vending_machine.internal_change['5p'])
   end
 end

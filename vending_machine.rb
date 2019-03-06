@@ -47,6 +47,16 @@ class VendingMachine
     end
   end
 
+  def add_internal_change(change)
+    change.each do |coin, quantity| 
+      if @internal_change[coin]
+        @internal_change[coin] += quantity
+      else
+        @internal_change[coin] = quantity
+      end
+    end
+  end
+
   private
   def verify_amount
     @inserted_money == @chosen_product[:price]
