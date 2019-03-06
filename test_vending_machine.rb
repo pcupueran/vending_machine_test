@@ -3,7 +3,12 @@ require "test/unit"
 
 class TestVendingMachine < Test::Unit::TestCase
   def setup
-    @vending_machine = VendingMachine.new
+    products = { 
+      lily: { name: 'lily', price: 100, quantity: 10 }, 
+      anemone: { name: 'anemone', price: 200, quantity: 5 } , 
+      daisy: { name: 'daisy', price: 300, quantity: 4 }
+    }
+    @vending_machine = VendingMachine.new(products)
     @vending_machine.select_product('daisy')
     @vending_machine.insert_money(300)
   end
@@ -48,7 +53,10 @@ class TestVendingMachine < Test::Unit::TestCase
   end
 
   def test_initial_products
-    products = [{ name: 'lily', price: 100 }, { name: 'anemone', price: 200 }]
+    products = { 
+      lily:{ name: 'lily', price: 100 }, 
+      anemone: { name: 'anemone', price: 200 }
+    }
     vending_machine = VendingMachine.new(products)
     assert_equal(products, vending_machine.products)
   end
@@ -67,5 +75,27 @@ class TestVendingMachine < Test::Unit::TestCase
 
     vending_machine = VendingMachine.new(nil, change)
     assert_equal(change, vending_machine.internal_change)
+  end
+
+  def test_refill_with_exiting_and_new_products
+    products = { 
+      lily:{ name: 'lily', quantity: 5 }, 
+      anemone: { name: 'anemone', quantity: 3 },
+      rose: { name: 'rose', price: 400, quantity: 5 }
+    }
+    @vending_machine.refill(products)
+    assert_equal(15, @vending_machine.products[:lily][:quantity])    
+    assert_equal(8, @vending_machine.products[:anemone][:quantity])    
+    assert_equal(5, @vending_machine.products[:rose][:quantity])    
+    assert_equal(400, @vending_machine.products[:rose][:price])    
+  end
+
+  def test_not_enough_space_for_products
+    products = { 
+      lily:{ name: 'lily', quantity: 10 }, 
+      anemone: { name: 'anemone', quantity: 30 }
+    }
+
+    assert_equal("There isn't enough space for all the products.", @vending_machine.refill(products))
   end
 end

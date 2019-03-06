@@ -1,15 +1,14 @@
 class VendingMachine
   attr_accessor :products, :chosen_product, :inserted_amount, :change, :insufficient_amount, :internal_change
-  
-  PRODUCTS = [{ name: 'lily', price: 100 }, { name: 'anemone', price: 200 } , { name: 'daisy', price: 300 }]
+  SIZE = 50
 
-  def initialize(products=PRODUCTS, change={})
+  def initialize(products={}, change={})
     @products = products
     @internal_change = change
   end
 
   def select_product(name)
-    @chosen_product = @products.find { |product|  product[:name] == name }
+    @chosen_product = @products[name.to_sym]
     @chosen_product ?  @chosen_product[:name] : "Opps. There isn't the product you've selected"
   end
 
@@ -23,6 +22,28 @@ class VendingMachine
       @chosen_product[:name]
     else
       process_transaction
+    end
+  end
+
+  def space_left
+    SIZE - occupied_space
+  end
+
+  def occupied_space
+    @products.values.inject(0) { |sum, product| sum + product[:quantity] }
+  end
+
+  def refill(products)
+    if space_left >= products.values.inject(0) { |sum, product| sum + product[:quantity] }
+      products.each do |name, attrs|
+        if @products[name] 
+          @products[name][:quantity] += attrs[:quantity]
+        else
+          @products[name] = attrs
+        end
+      end
+    else
+      "There isn't enough space for all the products."
     end
   end
 
